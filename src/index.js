@@ -5,6 +5,8 @@ import userRoute from "./routes/user.route.js";
 import exampleRoute from "./routes/example.route.js";
 import taskRoutes from "./routes/task.route.js"; // Importado para mostrar no Banco do Mongo Express
 import cors from 'cors';
+import gameRoutes from './routes/game.route.js';
+import wishlistRoutes from './routes/wishlist.route.js';
 
 
 import User from './models/User.js'; // Importado para mostrar no Banco do Mongo Express
@@ -33,6 +35,10 @@ app.use('/tasks', taskRoutes); // rota protegida
 app.get("/", (req, res) => {
     res.send({message: 'Hello World!'});
 });
+
+app.use('/games', gameRoutes);
+
+app.use('/wishlist', wishlistRoutes);
 
 app.listen(PORT, () => {
     // Por algum motivo, usou acento '`' aqui
