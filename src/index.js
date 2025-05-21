@@ -7,6 +7,8 @@ import taskRoutes from "./routes/task.route.js"; // Importado para mostrar no Ba
 import cors from 'cors';
 import gameRoutes from './routes/game.route.js';
 import wishlistRoutes from './routes/wishlist.route.js';
+import libraryRoutes from './routes/library.route.js';
+import reviewRoutes from './routes/review.route.js';
 
 import User from './models/User.js'; // Importado para mostrar no Banco do Mongo Express
 
@@ -39,6 +41,11 @@ app.use('/games', gameRoutes);
 
 app.use('/wishlist', wishlistRoutes);
 
+app.use('/library', libraryRoutes);
+
+app.use('/games', reviewRoutes);
+
+app.use('/reviews', reviewRoutes);
 
 app.listen(PORT, () => {
     // Por algum motivo, usou acento '`' aqui
