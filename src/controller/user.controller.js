@@ -3,6 +3,7 @@ import {
   registerUser,
   authenticateUser
 } from '../services/user.service.js';
+import User from '../models/User.js'; // Importe o modelo de usuário
 
 // Regex simples para validar e-mails
 const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -62,4 +63,49 @@ const login = async (req, res) => {
   }
 };
 
-export default { register, login };
+const getUserByUsername = async (req, res) => {
+  try {
+    const user = await User.findOne({ username: req.params.username });
+    if (!user) return res.status(404).json({ message: 'User not found.' });
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao buscar usuário' });
+  }
+};
+
+const getUserByEmail = async (req, res) => {
+  try {
+    const user = await User.findOne({ email: req.params.email });
+    if (!user) return res.status(404).json({ message: 'User not found.' });
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao buscar usuário' });
+  }
+};
+
+const getUserByIdentifier = async (req, res) => {
+  const { identifier } = req.params;
+  try {
+    // Verifica se é email
+    const query = identifier.includes('@')
+      ? { email: identifier }
+      : { username: identifier };
+    const user = await User.findOne(query);
+    if (!user) return res.status(404).json({ message: 'User not found.' });
+    // Retorne apenas os campos desejados
+    res.json({
+      username: user.username,
+      email: user.email
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao buscar usuário' });
+  }
+};
+
+export default {
+  register,
+  login,
+  getUserByUsername,
+  getUserByEmail,
+  getUserByIdentifier,
+};
