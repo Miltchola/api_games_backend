@@ -9,6 +9,6 @@ router.post('/register', userController.register);
 router.post('/login', userController.login);
 
 // Buscar usuário por username OU email
-router.get('/users/:identifier', userController.getUserByIdentifier);
+router.get('/:identifier', userController.getUserByIdentifier);
 
 export default router;

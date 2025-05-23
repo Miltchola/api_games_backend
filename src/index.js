@@ -21,12 +21,17 @@ db.connect();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors({
-  origin: 'http://localhost:5173', // Seu frontend
+const corsOptions = {
+  origin: [
+    'https://api-games-d0nc686az-miltcholas-projects.vercel.app',
+    'http://localhost:5173', // ajuste para a porta do seu frontend local
+  ],
+  methods: ['GET', 'PUT', 'POST', 'DELETE'],
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE']
-}));
+  optionsSuccessStatus: 204
+};
 
+app.use(cors(corsOptions));
 
 app.use(express.json());
 
