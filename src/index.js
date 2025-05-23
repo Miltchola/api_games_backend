@@ -12,6 +12,9 @@ import reviewRoutes from './routes/review.route.js';
 
 import User from './models/User.js'; // Importado para mostrar no Banco do Mongo Express
 
+import swaggerMiddleware from "./middleware/swagger.js";
+
+
 dotenv.config();
 db.connect();
 
@@ -26,6 +29,9 @@ app.use(cors({
 
 
 app.use(express.json());
+
+app.use(swaggerMiddleware); 
+
 
 app.use("/users", userRoute);
 
