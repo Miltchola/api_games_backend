@@ -23,7 +23,7 @@ const PORT = process.env.PORT || 3000;
 
 const corsOptions = {
   origin: [
-    'https://api-games-d0nc686az-miltcholas-projects.vercel.app',
+    'https://api-games.vercel.app/',
     'http://localhost:5173', // ajuste para a porta do seu frontend local
   ],
   methods: ['GET', 'PUT', 'POST', 'DELETE'],
