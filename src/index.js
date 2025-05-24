@@ -24,6 +24,7 @@ const PORT = process.env.PORT || 3000;
 const corsOptions = {
   origin: [
     'https://api-games.vercel.app/',
+    'https://api-games-mqct.onrender.com',
     'http://localhost:5173', // ajuste para a porta do seu frontend local
   ],
   methods: ['GET', 'PUT', 'POST', 'DELETE'],
