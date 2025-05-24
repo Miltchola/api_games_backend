@@ -15,6 +15,10 @@ const options = {
       {
         url: "https://api-games-backend.onrender.com",  
         description: "Servidor de Produção (Render)",
+      }, 
+      {
+        url: "https://api-games-backend.vercel.app",  
+        description: "Servidor de Produção (Vercel)",
       },
       {
         url: "http://localhost:3000",  // URL local
