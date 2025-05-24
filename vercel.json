@@ -1,16 +1,27 @@
 {
- "version": 2,
- "builds": [
-  {
-   "src": "src/index.js",
-   "use": "@vercel/node",
-   "config": { "includeFiles": ["dist/**"] }
-  }
- ],
- "routes": [
-  {
-   "src": "/(.*)",
-   "dest": "src/index.js"
-  }
- ]
+  "version": 2,
+  "builds": [
+    {
+      "src": "src/index.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "node_modules/swagger-ui-dist/**",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/docs(?:/|$)(.*)",
+      "dest": "src/index.js"
+    },
+    {
+      "src": "/swagger-ui/(.*)",
+      "dest": "node_modules/swagger-ui-dist/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "src/index.js"
+    }
+  ]
 }
