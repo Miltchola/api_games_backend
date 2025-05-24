@@ -11,7 +11,16 @@ const options = {
       title: "GAMES API",
       version: "1.0.0",
       description: "Documentação da API com Swagger",
-    },
+    }, servers: [
+      {
+        url: "https://api-games-backend.onrender.com",  
+        description: "Servidor de Produção (Render)",
+      },
+      {
+        url: "http://localhost:3000",  // URL local
+        description: "Servidor Local (Desenvolvimento)",
+      },
+    ],
     components: {
       securitySchemes: {
         bearerAuth: {
