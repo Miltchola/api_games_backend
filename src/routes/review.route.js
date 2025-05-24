@@ -66,7 +66,7 @@ router.get('/user/:userId', reviewController.getReviewsForUser);
  *             example:
  *               gameId: "abc123"
  *               rating: 4.5
- *               comment: "Muito bom!"
+ *               text: "Muito bom!"
  *     responses:
  *       201:
  *         description: Avaliação criada com sucesso
