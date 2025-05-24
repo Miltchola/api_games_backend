@@ -10,10 +10,24 @@ const options = {
     info: {
       title: "Minha API",
       version: "1.0.0",
+      description: "Documentação da API com Swagger",
     },
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
+    },
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
   },
-  apis: ["../routes/*.js"],
-
+  apis: ["./src/routes/*.js"], // Garante que todos os arquivos da pasta routes sejam lidos
 };
 
 const swaggerSpec = swaggerJsDoc(options);
@@ -21,8 +35,6 @@ const swaggerSpec = swaggerJsDoc(options);
 router.use("/docs", serve, setup(swaggerSpec));
 
 console.log("✅ Swagger middleware carregado!");
-console.log(`http://localhost:3000/docs/`);
-
-
+console.log(`📄 Documentação disponível em: http://localhost:3000/docs/`);
 
 export default router;
