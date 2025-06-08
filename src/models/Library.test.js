@@ -7,6 +7,7 @@ describe('Library Model', () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
+    await Library.syncIndexes(); // <-- Add this line
   });
 
   afterAll(async () => {
