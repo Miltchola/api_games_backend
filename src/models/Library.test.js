@@ -54,8 +54,7 @@ describe('Library Model', () => {
 
     let err;
     try {
-      await Library.create({ userId: '123', ... });
-      await Library.create({ userId: '123', ... }); // duplicate
+      await Library.create({ userId, games: [] });
     } catch (error) {
       err = error;
     }
