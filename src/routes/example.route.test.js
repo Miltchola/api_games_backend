@@ -15,6 +15,10 @@ describe('Example Route', () => {
     app.use('/', router);
   });
 
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('deve chamar verifyToken e securedExample ao acessar GET /', async () => {
     // Mock do middleware para passar direto
     verifyToken.mockImplementation((req, res, next) => next());

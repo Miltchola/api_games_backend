@@ -7,6 +7,7 @@ describe('Review Model', () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
+    await Review.syncIndexes(); // <-- Add this line
   });
 
   afterAll(async () => {
