@@ -7,16 +7,16 @@ describe('Library Model', () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    //await Library.syncIndexes(); // <-- Add this line
+    await Library.syncIndexes(); // <-- Add this line
   });
 
   afterAll(async () => {
-    //await mongoose.connection.db.dropDatabase();
-    //await mongoose.disconnect();
+    await mongoose.connection.db.dropDatabase();
+    await mongoose.disconnect();
   });
 
   afterEach(async () => {
-    //await Library.deleteMany({});
+    await Library.deleteMany({});
   });
 
   it('deve criar uma biblioteca válida', async () => {
@@ -41,7 +41,7 @@ describe('Library Model', () => {
     const library = new Library({ games: [] });
     let err;
     try {
-      //await library.save();
+      await library.save();
     } catch (error) {
       err = error;
     }
@@ -55,7 +55,7 @@ describe('Library Model', () => {
 
     let err;
     try {
-      //await Library.create({ userId, games: [] });
+      await Library.create({ userId, games: [] });
     } catch (error) {
       err = error;
     }
