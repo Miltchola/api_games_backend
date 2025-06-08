@@ -25,7 +25,7 @@ describe('userController', () => {
       const fakeUser = { username: 'joao', email: 'joao@email.com' };
       User.findOne.mockResolvedValue(fakeUser);
 
-      //await userController.getUserByUsername(req, res);
+      await userController.getUserByUsername(req, res);
 
       expect(User.findOne).toHaveBeenCalledWith({ username: 'joao' });
       expect(res.json).toHaveBeenCalledWith(fakeUser);
@@ -35,7 +35,7 @@ describe('userController', () => {
       req.params.username = 'naoexiste';
       User.findOne.mockResolvedValue(null);
 
-      //await userController.getUserByUsername(req, res);
+      await userController.getUserByUsername(req, res);
 
       expect(res.status).toHaveBeenCalledWith(404);
       expect(res.json).toHaveBeenCalledWith({ message: 'User not found.' });
@@ -45,7 +45,7 @@ describe('userController', () => {
       req.params.username = 'erro';
       User.findOne.mockRejectedValue(new Error('Erro'));
 
-      //await userController.getUserByUsername(req, res);
+      await userController.getUserByUsername(req, res);
 
       expect(res.status).toHaveBeenCalledWith(500);
       expect(res.json).toHaveBeenCalledWith({ error: 'Erro ao buscar usuário' });
@@ -58,7 +58,7 @@ describe('userController', () => {
       const fakeUser = { username: 'joao', email: 'joao@email.com' };
       User.findOne.mockResolvedValue(fakeUser);
 
-      //await userController.getUserByEmail(req, res);
+      await userController.getUserByEmail(req, res);
 
       expect(User.findOne).toHaveBeenCalledWith({ email: 'joao@email.com' });
       expect(res.json).toHaveBeenCalledWith(fakeUser);
@@ -68,7 +68,7 @@ describe('userController', () => {
       req.params.email = 'naoexiste@email.com';
       User.findOne.mockResolvedValue(null);
 
-      //await userController.getUserByEmail(req, res);
+      await userController.getUserByEmail(req, res);
 
       expect(res.status).toHaveBeenCalledWith(404);
       expect(res.json).toHaveBeenCalledWith({ message: 'User not found.' });
@@ -78,7 +78,7 @@ describe('userController', () => {
       req.params.email = 'erro@email.com';
       User.findOne.mockRejectedValue(new Error('Erro'));
 
-      //await userController.getUserByEmail(req, res);
+      await userController.getUserByEmail(req, res);
 
       expect(res.status).toHaveBeenCalledWith(500);
       expect(res.json).toHaveBeenCalledWith({ error: 'Erro ao buscar usuário' });
@@ -91,7 +91,7 @@ describe('userController', () => {
       const fakeUser = { username: 'joao', email: 'joao@email.com' };
       User.findOne.mockResolvedValue(fakeUser);
 
-      //await userController.getUserByIdentifier(req, res);
+      await userController.getUserByIdentifier(req, res);
 
       expect(User.findOne).toHaveBeenCalledWith({ email: 'joao@email.com' });
       expect(res.json).toHaveBeenCalledWith({ username: 'joao', email: 'joao@email.com' });
@@ -102,7 +102,7 @@ describe('userController', () => {
       const fakeUser = { username: 'joao', email: 'joao@email.com' };
       User.findOne.mockResolvedValue(fakeUser);
 
-      //await userController.getUserByIdentifier(req, res);
+      await userController.getUserByIdentifier(req, res);
 
       expect(User.findOne).toHaveBeenCalledWith({ username: 'joao' });
       expect(res.json).toHaveBeenCalledWith({ username: 'joao', email: 'joao@email.com' });
@@ -112,7 +112,7 @@ describe('userController', () => {
       req.params.identifier = 'naoexiste';
       User.findOne.mockResolvedValue(null);
 
-      //await userController.getUserByIdentifier(req, res);
+      await userController.getUserByIdentifier(req, res);
 
       expect(res.status).toHaveBeenCalledWith(404);
       expect(res.json).toHaveBeenCalledWith({ message: 'User not found.' });
@@ -122,7 +122,7 @@ describe('userController', () => {
       req.params.identifier = 'erro';
       User.findOne.mockRejectedValue(new Error('Erro'));
 
-      //await userController.getUserByIdentifier(req, res);
+      await userController.getUserByIdentifier(req, res);
 
       expect(res.status).toHaveBeenCalledWith(500);
       expect(res.json).toHaveBeenCalledWith({ error: 'Erro ao buscar usuário' });
