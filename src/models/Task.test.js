@@ -7,6 +7,7 @@ describe('Task Model', () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
+    await Task.syncIndexes();
   });
 
   afterAll(async () => {

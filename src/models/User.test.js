@@ -7,6 +7,7 @@ describe('User Model', () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
+    await User.syncIndexes();
   });
 
   afterAll(async () => {

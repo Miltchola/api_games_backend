@@ -7,6 +7,7 @@ describe('Game Model', () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
+    await Game.syncIndexes();
   });
 
   afterAll(async () => {
