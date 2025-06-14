@@ -92,13 +92,44 @@ const getUserByIdentifier = async (req, res) => {
       : { username: identifier };
     const user = await User.findOne(query);
     if (!user) return res.status(404).json({ message: 'User not found.' });
-    // Retorne apenas os campos desejados
+    // Retorne os campos desejados
     res.json({
       username: user.username,
-      email: user.email
+      email: user.email,
+      bio: user.bio,
+      profilePicture: user.profilePicture
     });
   } catch (error) {
     res.status(500).json({ error: 'Erro ao buscar usuário' });
+  }
+};
+
+const updateProfile = async (req, res) => {
+  const { identifier } = req.params;
+  const { bio, profilePicture } = req.body;
+
+  try {
+    // Busca por username ou email
+    const query = identifier.includes('@')
+      ? { email: identifier }
+      : { username: identifier };
+
+    const user = await User.findOneAndUpdate(
+      query,
+      { bio, profilePicture },
+      { new: true }
+    );
+
+    if (!user) return res.status(404).json({ message: 'User not found.' });
+
+    res.json({
+      username: user.username,
+      email: user.email,
+      bio: user.bio,
+      profilePicture: user.profilePicture
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao atualizar perfil do usuário' });
   }
 };
 
@@ -108,4 +139,5 @@ export default {
   getUserByUsername,
   getUserByEmail,
   getUserByIdentifier,
+  updateProfile,
 };
