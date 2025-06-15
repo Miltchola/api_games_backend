@@ -156,4 +156,36 @@ router.post('/login', userController.login);
  */
 router.get('/:identifier', userController.getUserByIdentifier);
 
+/**
+ * @swagger
+ * /users/{identifier}/profile:
+ *   put:
+ *     summary: Atualiza bio e foto de perfil do usuário
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: identifier
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Nome de usuário ou email
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               bio:
+ *                 type: string
+ *               profilePicture:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Perfil atualizado com sucesso
+ *       404:
+ *         description: Usuário não encontrado
+ */
+router.put('/:identifier/profile', userController.updateProfile);
+
 export default router;
