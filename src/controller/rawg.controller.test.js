@@ -7,8 +7,6 @@ jest.mock('../services/rawg.service.js', () => ({
   fetchGamesFromRawg: jest.fn(),
 }));
 
-const gameService = require('../services/game.service');
-
 describe('rawgController', () => {
   let req, res;
 
@@ -72,7 +70,7 @@ describe('rawgController', () => {
         { id: 2, name: 'RAWG Game 2', released: '2021-01-01', background_image: 'img2', rating: 5, ratings_count: 20 }
       ];
       fetchGamesFromRawg.mockResolvedValue(rawgGames);
-      gameService.findGameByRawgId
+      gameService.getGameByRawgId
         .mockResolvedValueOnce(null) // Game 1 não existe
         .mockResolvedValueOnce({ id: 2 }); // Game 2 já existe
 
@@ -82,8 +80,8 @@ describe('rawgController', () => {
       await rawgController.importFromRawg(req, res);
 
       expect(fetchGamesFromRawg).toHaveBeenCalled();
-      expect(gameService.findGameByRawgId).toHaveBeenCalledWith(1);
-      expect(gameService.findGameByRawgId).toHaveBeenCalledWith(2);
+      expect(gameService.getGameByRawgId).toHaveBeenCalledWith(1);
+      expect(gameService.getGameByRawgId).toHaveBeenCalledWith(2);
       expect(gameService.createGame).toHaveBeenCalledWith({
         title: 'RAWG Game 1',
         description: '',
