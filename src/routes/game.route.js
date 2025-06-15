@@ -80,4 +80,6 @@ router.get('/', gameController.getAll);
  */
 router.post('/import-rawg', rawgController.importFromRawg);
 
+router.get('/:rawgId', gameController.getByRawgId);
+
 export default router;

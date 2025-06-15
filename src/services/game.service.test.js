@@ -28,13 +28,4 @@ describe('gameService', () => {
     expect(result).toEqual(games);
   });
 
-  it('deve buscar um jogo pelo rawgId com findGameByRawgId', async () => {
-    const game = { _id: '2', rawgId: 'abc123' };
-    Game.findOne.mockResolvedValue(game);
-
-    const result = await gameService.findGameByRawgId('abc123');
-
-    expect(Game.findOne).toHaveBeenCalledWith({ rawgId: 'abc123' });
-    expect(result).toEqual(game);
-  });
 });

@@ -25,7 +25,7 @@ const corsOptions = {
     'https://api-games.vercel.app',
     'https://api-games-backend.vercel.app',
     'https://api-games-mqct.onrender.com',
-    'http://localhost:5173',
+    'http://localhost:5173', // ajuste para a porta do seu frontend local
   ],
   methods: ['GET', 'PUT', 'POST', 'DELETE'],
   credentials: true,

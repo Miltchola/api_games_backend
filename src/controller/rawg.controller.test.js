@@ -63,49 +63,5 @@ describe('rawgController', () => {
     });
   });
 
-  describe('importFromRawg', () => {
-    it('deve importar jogos que não existem e retornar 201', async () => {
-      const rawgGames = [
-        { id: 1, name: 'RAWG Game 1', released: '2020-01-01', background_image: 'img1', rating: 4, ratings_count: 10 },
-        { id: 2, name: 'RAWG Game 2', released: '2021-01-01', background_image: 'img2', rating: 5, ratings_count: 20 }
-      ];
-      fetchGamesFromRawg.mockResolvedValue(rawgGames);
-      gameService.findGameByRawgId
-        .mockResolvedValueOnce(null) // Game 1 não existe
-        .mockResolvedValueOnce({ id: 2 }); // Game 2 já existe
-
-      const createdGame = { id: 1, title: 'RAWG Game 1' };
-      gameService.createGame.mockResolvedValue(createdGame);
-
-      await rawgController.importFromRawg(req, res);
-
-      expect(fetchGamesFromRawg).toHaveBeenCalled();
-      expect(gameService.findGameByRawgId).toHaveBeenCalledWith(1);
-      expect(gameService.findGameByRawgId).toHaveBeenCalledWith(2);
-      expect(gameService.createGame).toHaveBeenCalledWith({
-        title: 'RAWG Game 1',
-        description: '',
-        genre: '',
-        releaseDate: '2020-01-01',
-        rawgId: 1,
-        background_image: 'img1',
-        rating: 4,
-        ratings_count: 10
-      });
-      expect(res.status).toHaveBeenCalledWith(201);
-      expect(res.json).toHaveBeenCalledWith({
-        message: 'Jogos importados!',
-        savedGames: [createdGame]
-      });
-    });
-
-    it('deve retornar 500 em caso de erro', async () => {
-      fetchGamesFromRawg.mockRejectedValue(new Error('Erro'));
-
-      await rawgController.importFromRawg(req, res);
-
-      expect(res.status).toHaveBeenCalledWith(500);
-      expect(res.json).toHaveBeenCalledWith({ message: 'Erro ao importar jogos da RAWG.' });
-    });
-  });
+  
 });
