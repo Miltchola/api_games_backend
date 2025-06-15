@@ -7,6 +7,8 @@ jest.mock('../services/rawg.service.js', () => ({
   fetchGamesFromRawg: jest.fn(),
 }));
 
+const gameService = require('../services/game.service');
+
 describe('rawgController', () => {
   let req, res;
 
