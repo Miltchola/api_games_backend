@@ -27,6 +27,7 @@ const corsOptions = {
    'https://api-games-backend.vercel.app',
     'https://api-games-mqct.onrender.com',
     'http://localhost:5173', // ajuste para a porta do seu frontend local
+    'https://opulent-goggles-wrxrxrgw974v2rpq-5173.app.github.dev',
   ],
   methods: ['GET', 'PUT', 'POST', 'DELETE'],
   credentials: true,
