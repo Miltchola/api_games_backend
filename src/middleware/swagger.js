@@ -11,17 +11,18 @@ const options = {
       title: "GAMES API",
       version: "1.0.0",
       description: "Documentação da API com Swagger",
-    }, servers: [
+    },
+    servers: [
       {
-        url: "https://api-games-backend.onrender.com",  
+        url: "https://api-games-backend.onrender.com",
         description: "Servidor de Produção (Render)",
-      }, 
+      },
       {
-        url: "https://api-games-backend.vercel.app",  
+        url: "https://api-games-backend.vercel.app",
         description: "Servidor de Produção (Vercel)",
       },
       {
-        url: "http://localhost:3000",  // URL local
+        url: "http://localhost:3000",
         description: "Servidor Local (Desenvolvimento)",
       },
     ],
@@ -45,7 +46,20 @@ const options = {
 
 const swaggerSpec = swaggerJsDoc(options);
 
-router.use("/docs", serve, setup(swaggerSpec));
+// ✅ Adição dos arquivos do Swagger via CDN (necessário para Vercel)
+router.use(
+  "/docs",
+  serve,
+  setup(swaggerSpec, {
+    customCssUrl:
+      "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.css",
+    customJs: [
+      "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui-bundle.js",
+      "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui-standalone-preset.js",
+      "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui-init.js"
+    ]
+  })
+);
 
 console.log("✅ Swagger middleware carregado!");
 console.log(`📄 Documentação disponível em: http://localhost:3000/docs/`);
