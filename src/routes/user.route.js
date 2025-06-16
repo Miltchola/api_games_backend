@@ -29,13 +29,33 @@ const router = express.Router();
  *             properties:
  *               username:
  *                 type: string
+ *                 example: "johndoe"
  *               email:
  *                 type: string
+ *                 example: "john@example.com"
  *               password:
  *                 type: string
+ *                 example: "senha123"
  *     responses:
  *       201:
  *         description: Usuário registrado com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 _id:
+ *                   type: string
+ *                 username:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ *                 createdAt:
+ *                   type: string
+ *                   format: date-time
+ *                 updatedAt:
+ *                   type: string
+ *                   format: date-time
  *       400:
  *         description: Erro na requisição
  */
@@ -60,13 +80,39 @@ router.post('/register', userController.register);
  *             properties:
  *               username:
  *                 type: string
+ *                 example: "johndoe"
  *               email:
  *                 type: string
+ *                 example: "john@example.com"
  *               password:
  *                 type: string
+ *                 example: "senha123"
  *     responses:
  *       200:
  *         description: Login bem-sucedido
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *                   example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     _id:
+ *                       type: string
+ *                     username:
+ *                       type: string
+ *                     email:
+ *                       type: string
+ *                     createdAt:
+ *                       type: string
+ *                       format: date-time
+ *                     updatedAt:
+ *                       type: string
+ *                       format: date-time
  *       401:
  *         description: Credenciais inválidas
  */
@@ -88,9 +134,58 @@ router.post('/login', userController.login);
  *     responses:
  *       200:
  *         description: Usuário encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 _id:
+ *                   type: string
+ *                 username:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ *                 createdAt:
+ *                   type: string
+ *                   format: date-time
+ *                 updatedAt:
+ *                   type: string
+ *                   format: date-time
  *       404:
  *         description: Usuário não encontrado
  */
 router.get('/:identifier', userController.getUserByIdentifier);
+
+/**
+ * @swagger
+ * /users/{identifier}/profile:
+ *   put:
+ *     summary: Atualiza bio e foto de perfil do usuário
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: identifier
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Nome de usuário ou email
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               bio:
+ *                 type: string
+ *               profilePicture:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Perfil atualizado com sucesso
+ *       404:
+ *         description: Usuário não encontrado
+ */
+router.put('/:identifier/profile', userController.updateProfile);
 
 export default router;

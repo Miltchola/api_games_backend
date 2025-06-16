@@ -14,6 +14,16 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         select: false
+    },
+    bio: {
+        type: String,
+        required: false,
+        default: ''
+    },
+    profilePicture: {
+        type: String, // URL da imagem ou caminho do arquivo
+        required: false,
+        default: ''
     }
 });
 
