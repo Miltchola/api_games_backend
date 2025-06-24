@@ -1,139 +1,85 @@
-import libraryController from './library.controller.js';
-import libraryService from '../services/library.service.js';
-import Game from '../models/Game.js';
+import Wishlist from '../models/Wishlist.js';
+import wishlistService from './wishlist.service.js';
 
-jest.mock('../services/library.service.js');
-jest.mock('../models/Game.js');
+jest.mock('../models/Wishlist.js');
 
-describe('libraryController', () => {
-  let req, res;
-
-  beforeEach(() => {
-    req = { userId: 'user123', body: {} };
-    res = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn(),
-    };
+describe('wishlistService', () => {
+  afterEach(() => {
     jest.clearAllMocks();
   });
 
-  describe('getLibrary', () => {
-    it('deve retornar 200 e a library', async () => {
-      const fakeLibrary = { games: [{ id: 1 }] };
-      libraryService.getLibraryByUser.mockResolvedValue(fakeLibrary);
+  it('deve buscar a wishlist de um usuário com getWishlistByUser', async () => {
+    const userId = 'user1';
+    const wishlist = { userId, games: [12345] };
+    Wishlist.findOne.mockResolvedValue(wishlist);
 
-      await libraryController.getLibrary(req, res);
+    const result = await wishlistService.getWishlistByUser(userId);
 
-      expect(libraryService.getLibraryByUser).toHaveBeenCalledWith('user123');
-      expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith(fakeLibrary);
-    });
-
-    it('deve retornar 200 e objeto vazio se não houver library', async () => {
-      libraryService.getLibraryByUser.mockResolvedValue(null);
-
-      await libraryController.getLibrary(req, res);
-
-      expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith({ games: [] });
-    });
-
-    it('deve retornar 500 em caso de erro', async () => {
-      libraryService.getLibraryByUser.mockRejectedValue(new Error('Erro'));
-
-      await libraryController.getLibrary(req, res);
-
-      expect(res.status).toHaveBeenCalledWith(500);
-      expect(res.json).toHaveBeenCalledWith({ message: 'Erro ao buscar library.' });
-    });
+    expect(Wishlist.findOne).toHaveBeenCalledWith({ userId });
+    expect(result).toEqual([12345]);
   });
 
-  describe('addGame', () => {
-    it('deve adicionar jogo usando rawgId', async () => {
-      req.body = { rawgId: '12345' };
-      const fakeLibrary = { games: ['12345'] };
-      libraryService.addGameToLibrary.mockResolvedValue(fakeLibrary);
+  it('deve adicionar um jogo a uma nova wishlist com addGameToWishlist', async () => {
+    const userId = 'user2';
+    const rawgId = 54321;
+    Wishlist.findOne.mockResolvedValue(null);
+    const saveMock = jest.fn().mockResolvedValue('savedWishlist');
+    Wishlist.mockImplementation(() => ({ userId, games: [rawgId], save: saveMock }));
 
-      await libraryController.addGame(req, res);
+    const result = await wishlistService.addGameToWishlist(userId, rawgId);
 
-      expect(libraryService.addGameToLibrary).toHaveBeenCalledWith('user123', '12345');
-      expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith(fakeLibrary);
-    });
-
-    it('deve adicionar jogo usando rawgId', async () => {
-      req.body = { rawgId: 'rawg456' };
-      const fakeGame = { _id: 'game456' };
-      const fakeLibrary = { games: ['game456'] };
-      Game.findOne.mockResolvedValue(fakeGame);
-      libraryService.addGameToLibrary.mockResolvedValue(fakeLibrary);
-
-      await libraryController.addGame(req, res);
-
-      expect(Game.findOne).toHaveBeenCalledWith({ rawgId: 'rawg456' });
-      expect(libraryService.addGameToLibrary).toHaveBeenCalledWith('user123', 'game456');
-      expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith(fakeLibrary);
-    });
-
-    it('deve retornar 404 se rawgId não encontrar jogo', async () => {
-      req.body = { rawgId: 'rawg789' };
-      Game.findOne.mockResolvedValue(null);
-
-      await libraryController.addGame(req, res);
-
-      expect(res.status).toHaveBeenCalledWith(404);
-      expect(res.json).toHaveBeenCalledWith({ message: 'Jogo não encontrado.' });
-    });
-
-    it('deve retornar 400 se não houver gameId nem rawgId', async () => {
-      req.body = {};
-      await libraryController.addGame(req, res);
-
-      expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({ message: 'gameId ou rawgId é obrigatório.' });
-    });
-
-    it('deve retornar 500 em caso de erro', async () => {
-      req.body = { rawgId: '12345' };
-      libraryService.addGameToLibrary.mockRejectedValue(new Error('Erro'));
-
-      await libraryController.addGame(req, res);
-
-      expect(res.status).toHaveBeenCalledWith(500);
-      expect(res.json).toHaveBeenCalledWith({ message: 'Erro ao adicionar jogo à library.' });
-    });
+    expect(Wishlist.findOne).toHaveBeenCalledWith({ userId });
+    expect(saveMock).toHaveBeenCalled();
+    expect(result).toBe('savedWishlist');
   });
 
-  describe('removeGame', () => {
-    it('deve remover jogo da library', async () => {
-      req.body = { rawgId: '12345' };
-      const fakeLibrary = { games: [] };
-      libraryService.removeGameFromLibrary.mockResolvedValue(fakeLibrary);
+  it('deve adicionar um jogo a uma wishlist existente se não estiver presente', async () => {
+    const userId = 'user3';
+    const rawgId = 12345;
+    const saveMock = jest.fn().mockResolvedValue('savedWishlist');
+    const wishlist = { userId, games: [], save: saveMock };
+    Wishlist.findOne.mockResolvedValue(wishlist);
 
-      await libraryController.removeGame(req, res);
+    const result = await wishlistService.addGameToWishlist(userId, rawgId);
 
-      expect(libraryService.removeGameFromLibrary).toHaveBeenCalledWith('user123', '12345');
-      expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith(fakeLibrary);
-    });
+    expect(wishlist.games).toContain(rawgId);
+    expect(saveMock).toHaveBeenCalled();
+    expect(result).toBe('savedWishlist');
+  });
 
-    it('deve retornar 400 se não houver gameId', async () => {
-      req.body = {};
-      await libraryController.removeGame(req, res);
+  it('não deve adicionar um jogo já existente na wishlist', async () => {
+    const userId = 'user4';
+    const rawgId = 1234;
+    const saveMock = jest.fn().mockResolvedValue('savedWishlist');
+    const wishlist = { userId, games: [rawgId], save: saveMock };
+    Wishlist.findOne.mockResolvedValue(wishlist);
 
-      expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({ message: 'gameId é obrigatório.' });
-    });
+    const result = await wishlistService.addGameToWishlist(userId, rawgId);
 
-    it('deve retornar 500 em caso de erro', async () => {
-      req.body = { rawgId: '12345' };
-      libraryService.removeGameFromLibrary.mockRejectedValue(new Error('Erro'));
+    expect(wishlist.games).toEqual([rawgId]);
+    expect(saveMock).toHaveBeenCalled();
+    expect(result).toBe('savedWishlist');
+  });
 
-      await libraryController.removeGame(req, res);
+  it('deve remover um jogo da wishlist com removeGameFromWishlist', async () => {
+    const userId = 'user5';
+    const rawgId = 12345;
+    const saveMock = jest.fn().mockResolvedValue('savedWishlist');
+    const wishlist = { userId, games: [rawgId, 67890], save: saveMock };
+    Wishlist.findOne.mockResolvedValue(wishlist);
 
-      expect(res.status).toHaveBeenCalledWith(500);
-      expect(res.json).toHaveBeenCalledWith({ message: 'Erro ao remover jogo da library.' });
-    });
+    const result = await wishlistService.removeGameFromWishlist(userId, rawgId);
+
+    expect(wishlist.games).not.toContain(rawgId);
+    expect(saveMock).toHaveBeenCalled();
+    expect(result).toBe('savedWishlist');
+  });
+
+  it('deve retornar null ao tentar remover de uma wishlist inexistente', async () => {
+    Wishlist.findOne.mockResolvedValue(null);
+
+    const result = await wishlistService.removeGameFromWishlist('user6', 1234);
+
+    expect(result).toBeNull();
   });
 });
