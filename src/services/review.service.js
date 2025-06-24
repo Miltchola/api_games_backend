@@ -59,3 +59,7 @@ export const createLocalReview = async ({ userId, gameId, text, username }) => {
   await review.save();
   return review;
 };
+
+export const getReviewsByRawgGameId = async (rawgId) => {
+  return Review.find({ rawgGameId: Number(rawgId) });
+};

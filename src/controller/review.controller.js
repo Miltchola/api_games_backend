@@ -1,4 +1,4 @@
-import { fetchAndSaveReviewsFromRawg, getReviewsByGame, getReviewsByUser } from '../services/review.service.js';
+import { fetchAndSaveReviewsFromRawg, getReviewsByGame, getReviewsByUser, getReviewsByRawgGameId } from '../services/review.service.js';
 import Game from '../models/Game.js';
 import { createLocalReview } from '../services/review.service.js';
 
@@ -59,4 +59,21 @@ const importAllReviews = async (req, res) => {
   }
 };
 
-export default { getReviewsForGame, getReviewsForUser, createReview, importAllReviews };
+const getReviewsForGameByRawgId = async (req, res) => {
+  const { rawgId } = req.params;
+  try {
+    // Busca reviews pelo campo rawgGameId
+    const reviews = await getReviewsByRawgGameId(rawgId);
+    res.status(200).json(reviews);
+  } catch (err) {
+    res.status(500).json({ message: 'Erro ao buscar reviews.', error: err.message });
+  }
+};
+
+export default { 
+  getReviewsForGame, 
+  getReviewsForUser, 
+  createReview, 
+  importAllReviews,
+  getReviewsForGameByRawgId // adicione aqui
+};

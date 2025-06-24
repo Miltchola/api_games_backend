@@ -122,4 +122,23 @@ router.post('/', verifyToken, reviewController.createReview);
  */
 router.post('/import-all', reviewController.importAllReviews);
 
+/**
+ * @swagger
+ * /reviews/game/rawg/{rawgId}:
+ *   get:
+ *     summary: Lista todas as avaliações de um jogo pelo rawgId
+ *     tags: [Reviews]
+ *     parameters:
+ *       - in: path
+ *         name: rawgId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: RAWG ID do jogo
+ *     responses:
+ *       200:
+ *         description: Lista de avaliações
+ */
+router.get('/game/rawg/:rawgId', reviewController.getReviewsForGameByRawgId);
+
 export default router;
