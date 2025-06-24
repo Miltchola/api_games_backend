@@ -49,14 +49,14 @@ describe('wishlistController', () => {
   });
 
   describe('addGame', () => {
-    it('deve adicionar um jogo usando gameId', async () => {
-      req.body = { gameId: 'game1' };
-      const fakeWishlist = { games: ['game1'] };
+    it('deve adicionar um jogo usando rawgId', async () => {
+      req.body = { rawgId: '12345' };
+      const fakeWishlist = { games: ['12345'] };
       wishlistService.addGameToWishlist.mockResolvedValue(fakeWishlist);
 
       await wishlistController.addGame(req, res);
 
-      expect(wishlistService.addGameToWishlist).toHaveBeenCalledWith('user1', 'game1');
+      expect(wishlistService.addGameToWishlist).toHaveBeenCalledWith('user1', '12345');
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith(fakeWishlist);
     });
@@ -95,7 +95,7 @@ describe('wishlistController', () => {
     });
 
     it('deve retornar 500 em caso de erro', async () => {
-      req.body = { gameId: 'game1' };
+      req.body = { rawgId: 'game1' };
       wishlistService.addGameToWishlist.mockRejectedValue(new Error('Erro'));
 
       await wishlistController.addGame(req, res);
@@ -107,7 +107,7 @@ describe('wishlistController', () => {
 
   describe('removeGame', () => {
     it('deve remover um jogo da wishlist', async () => {
-      req.body = { gameId: 'game1' };
+      req.body = { rawgId: 'game1' };
       const fakeWishlist = { games: [] };
       wishlistService.removeGameFromWishlist.mockResolvedValue(fakeWishlist);
 
@@ -127,7 +127,7 @@ describe('wishlistController', () => {
     });
 
     it('deve retornar 500 em caso de erro', async () => {
-      req.body = { gameId: 'game1' };
+      req.body = { rawgId: 'game1' };
       wishlistService.removeGameFromWishlist.mockRejectedValue(new Error('Erro'));
 
       await wishlistController.removeGame(req, res);

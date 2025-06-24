@@ -16,7 +16,6 @@ describe('libraryService', () => {
     const result = await libraryService.getLibraryByUser(userId);
 
     expect(Library.findOne).toHaveBeenCalledWith({ userId });
-    expect(library.populate).toHaveBeenCalledWith('games');
     expect(result).toBe('populatedLibrary');
   });
 

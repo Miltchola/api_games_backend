@@ -16,7 +16,6 @@ describe('wishlistService', () => {
     const result = await wishlistService.getWishlistByUser(userId);
 
     expect(Wishlist.findOne).toHaveBeenCalledWith({ userId });
-    expect(wishlist.populate).toHaveBeenCalledWith('games');
     expect(result).toBe('populatedWishlist');
   });
 

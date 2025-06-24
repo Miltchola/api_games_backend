@@ -21,12 +21,12 @@ describe('Wishlist Model', () => {
 
   it('deve criar uma wishlist válida', async () => {
     const userId = new mongoose.Types.ObjectId();
-    const gameId1 = new mongoose.Types.ObjectId();
-    const gameId2 = new mongoose.Types.ObjectId();
+    const rawgId1 = 12345;
+    const rawgId2 = 67890;
 
     const wishlist = new Wishlist({
       userId,
-      games: [gameId1, gameId2],
+      games: [rawgId1, rawgId2],
     });
 
     const savedWishlist = await wishlist.save();
@@ -34,7 +34,7 @@ describe('Wishlist Model', () => {
     expect(savedWishlist._id).toBeDefined();
     expect(savedWishlist.userId.toString()).toBe(userId.toString());
     expect(savedWishlist.games.length).toBe(2);
-    expect(savedWishlist.games[0].toString()).toBe(gameId1.toString());
+    expect(savedWishlist.games[0].toString()).toBe(rawgId1.toString());
   });
 
   it('deve exigir o campo userId', async () => {

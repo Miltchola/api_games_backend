@@ -49,14 +49,14 @@ describe('libraryController', () => {
   });
 
   describe('addGame', () => {
-    it('deve adicionar jogo usando gameId', async () => {
-      req.body = { gameId: 'game123' };
-      const fakeLibrary = { games: ['game123'] };
+    it('deve adicionar jogo usando rawgId', async () => {
+      req.body = { rawgId: '12345' };
+      const fakeLibrary = { games: ['12345'] };
       libraryService.addGameToLibrary.mockResolvedValue(fakeLibrary);
 
       await libraryController.addGame(req, res);
 
-      expect(libraryService.addGameToLibrary).toHaveBeenCalledWith('user123', 'game123');
+      expect(libraryService.addGameToLibrary).toHaveBeenCalledWith('user123', '12345');
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith(fakeLibrary);
     });
@@ -95,7 +95,7 @@ describe('libraryController', () => {
     });
 
     it('deve retornar 500 em caso de erro', async () => {
-      req.body = { gameId: 'game123' };
+      req.body = { rawgId: '12345' };
       libraryService.addGameToLibrary.mockRejectedValue(new Error('Erro'));
 
       await libraryController.addGame(req, res);
@@ -107,13 +107,13 @@ describe('libraryController', () => {
 
   describe('removeGame', () => {
     it('deve remover jogo da library', async () => {
-      req.body = { gameId: 'game123' };
+      req.body = { rawgId: '12345' };
       const fakeLibrary = { games: [] };
       libraryService.removeGameFromLibrary.mockResolvedValue(fakeLibrary);
 
       await libraryController.removeGame(req, res);
 
-      expect(libraryService.removeGameFromLibrary).toHaveBeenCalledWith('user123', 'game123');
+      expect(libraryService.removeGameFromLibrary).toHaveBeenCalledWith('user123', '12345');
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith(fakeLibrary);
     });
@@ -127,7 +127,7 @@ describe('libraryController', () => {
     });
 
     it('deve retornar 500 em caso de erro', async () => {
-      req.body = { gameId: 'game123' };
+      req.body = { rawgId: '12345' };
       libraryService.removeGameFromLibrary.mockRejectedValue(new Error('Erro'));
 
       await libraryController.removeGame(req, res);
