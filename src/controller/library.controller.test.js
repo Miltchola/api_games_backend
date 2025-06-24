@@ -1,5 +1,6 @@
 import Wishlist from '../models/Wishlist.js';
-import wishlistService from './wishlist.service.js';
+import wishlistService from '../services/wishlist.service.js';
+import libraryController from './library.controller.js';
 
 jest.mock('../models/Wishlist.js');
 
