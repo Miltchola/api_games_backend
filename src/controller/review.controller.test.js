@@ -101,7 +101,7 @@ describe('reviewController', () => {
     });
 
     it('deve criar review e retornar 201', async () => {
-      req.body = { gameId: 'game1', text: 'Muito bom!' };
+      req.body = { rawgGameId: 'game1', text: 'Muito bom!' };
       const fakeReview = { id: 1, text: 'Muito bom!' };
       createLocalReview.mockResolvedValue(fakeReview);
 
@@ -118,7 +118,7 @@ describe('reviewController', () => {
     });
 
     it('deve retornar 500 em caso de erro', async () => {
-      req.body = { gameId: 'game1', text: 'Muito bom!' };
+      req.body = { rawgGameId: 'game1', text: 'Muito bom!' }; // <-- CORRIGIDO
       createLocalReview.mockRejectedValue(new Error('Erro'));
 
       await reviewController.createReview(req, res);

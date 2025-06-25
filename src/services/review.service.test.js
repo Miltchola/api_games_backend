@@ -70,13 +70,13 @@ describe('review.service', () => {
   describe('createLocalReview', () => {
     it('deve criar e salvar uma review local', async () => {
       const mockReview = { save: jest.fn().mockResolvedValue(), _id: 'r1' };
-      Game.findById.mockResolvedValue({ _id: 'gameId' });
+      Game.findOne.mockResolvedValue({ _id: 'gameId' });
       Review.mockImplementation(() => mockReview);
 
-      const data = { userId: 'u1', gameId: 'gameId', text: 'Texto', username: 'userX' };
+      const data = { userId: 'u1', rawgGameId: 123, text: 'Texto', username: 'userX' }; // <-- Corrigido aqui
       const result = await reviewService.createLocalReview(data);
 
-      expect(Game.findById).toHaveBeenCalledWith('gameId');
+      expect(Game.findOne).toHaveBeenCalledWith({ rawgId: 123 });
       expect(mockReview.save).toHaveBeenCalled();
       expect(result).toBe(mockReview);
     });
