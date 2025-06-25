@@ -68,23 +68,34 @@ describe('review.service', () => {
   });
 
   describe('createLocalReview', () => {
-    it('deve criar e salvar uma review local', async () => {
-      const mockReview = { save: jest.fn().mockResolvedValue(), _id: 'r1' };
-      Game.findById.mockResolvedValue({ _id: 'gameId' });
-      Review.mockImplementation(() => mockReview);
+  it('deve criar e salvar uma review local', async () => {
+    const mockReview = { save: jest.fn().mockResolvedValue(), _id: 'r1' };
+    const mockGame = { _id: 'gameId' };
+    Game.findOne.mockResolvedValue(mockGame);
+    Review.mockImplementation(() => mockReview);
 
-      const data = { userId: 'u1', gameId: 'gameId', text: 'Texto', username: 'userX' };
-      const result = await reviewService.createLocalReview(data);
+    const data = { 
+      userId: 'u1', 
+      rawgGameId: '123', // Note this is a string to match the parameter
+      text: 'Texto', 
+      username: 'userX'
+    };
+    const result = await reviewService.createLocalReview(data);
 
-      expect(Game.findById).toHaveBeenCalledWith('gameId');
-      expect(mockReview.save).toHaveBeenCalled();
-      expect(result).toBe(mockReview);
-    });
-
-    it('deve lançar erro se o jogo não existir', async () => {
-      Game.findById.mockResolvedValue(null);
-      await expect(reviewService.createLocalReview({ userId: 'u2', gameId: 'notfound', text: 't', username: 'u' }))
-        .rejects.toThrow('Game not found.');
-    });
+    expect(Game.findOne).toHaveBeenCalledWith({ rawgId: 123 }); // Should convert to number
+    expect(mockReview.save).toHaveBeenCalled();
+    expect(result).toBe(mockReview);
   });
+
+  it('deve lançar erro se o jogo não existir', async () => {
+    Game.findOne.mockResolvedValue(null);
+    await expect(reviewService.createLocalReview({ 
+      userId: 'u2', 
+      rawgGameId: 'notfound', // Changed from gameId to rawgGameId
+      text: 't', 
+      username: 'u' 
+    }))
+    .rejects.toThrow('Game not found.');
+  });
+});
 });

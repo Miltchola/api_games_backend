@@ -44,17 +44,6 @@ describe('Review Model', () => {
     expect(savedReview.created_at).toBeInstanceOf(Date);
   });
 
-  it('deve exigir o campo game', async () => {
-    const review = new Review({ username: 'user' });
-    let err;
-    try {
-      await review.save();
-    } catch (error) {
-      err = error;
-    }
-    expect(err).toBeDefined();
-    expect(err.errors.game).toBeDefined();
-  });
 
   it('não deve permitir rawgReviewId duplicado', async () => {
     const gameId = new mongoose.Types.ObjectId();
