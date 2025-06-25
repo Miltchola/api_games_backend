@@ -91,13 +91,13 @@ describe('reviewController', () => {
   });
 
   describe('createReview', () => {
-    it('deve retornar 400 se faltar gameId ou text', async () => {
-      req.body = { gameId: '', text: '' };
+    it('deve retornar 400 se faltar rawgGameId ou text', async () => {
+      req.body = { rawgGameId: '', text: '' };
 
       await reviewController.createReview(req, res);
 
       expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({ message: 'gameId e text são obrigatórios.' });
+      expect(res.json).toHaveBeenCalledWith({ message: 'rawgGameId e text são obrigatórios.' });
     });
 
     it('deve criar review e retornar 201', async () => {
@@ -109,7 +109,7 @@ describe('reviewController', () => {
 
       expect(createLocalReview).toHaveBeenCalledWith({
         userId: 'user123',
-        gameId: 'game1',
+        rawgGameId: 'game1',
         text: 'Muito bom!',
         username: 'TestUser'
       });
