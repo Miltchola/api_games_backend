@@ -141,4 +141,29 @@ router.post('/import-all', reviewController.importAllReviews);
  */
 router.get('/game/rawg/:rawgId', reviewController.getReviewsForGameByRawgId);
 
+/**
+ * @swagger
+ * /reviews/{reviewId}:
+ *   delete:
+ *     summary: Deleta uma review (apenas o autor pode deletar)
+ *     tags: [Reviews]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: reviewId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID da review
+ *     responses:
+ *       200:
+ *         description: Review deletada com sucesso
+ *       403:
+ *         description: Não autorizado
+ *       404:
+ *         description: Review não encontrada
+ */
+router.delete('/:reviewId', verifyToken, reviewController.deleteReview);
+
 export default router;

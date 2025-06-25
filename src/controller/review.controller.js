@@ -1,6 +1,8 @@
 import { fetchAndSaveReviewsFromRawg, getReviewsByGame, getReviewsByUser, getReviewsByRawgGameId } from '../services/review.service.js';
 import Game from '../models/Game.js';
 import { createLocalReview } from '../services/review.service.js';
+import User from '../models/User.js';
+import Review from '../models/Review.js';
 
 const getReviewsForGame = async (req, res) => {
   const { gameId } = req.params;
@@ -31,16 +33,22 @@ const getReviewsForUser = async (req, res) => {
 };
 
 const createReview = async (req, res) => {
-  const { gameId, text } = req.body;
+  const { rawgGameId, text } = req.body;
   const userId = req.userId; // Supondo que você use autenticação JWT
-  const username = req.username || 'Usuário'; // Ajuste conforme seu sistema
 
-  if (!gameId || !text) {
-    return res.status(400).json({ message: 'gameId e text são obrigatórios.' });
+  if (!rawgGameId || !text) {
+    return res.status(400).json({ message: 'rawgGameId e text são obrigatórios.' });
   }
 
   try {
-    const review = await createLocalReview({ userId, gameId, text, username });
+    // Busca o usuário para pegar o username
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'Usuário não encontrado.' });
+    }
+    const username = user.username;
+
+    const review = await createLocalReview({ userId, rawgGameId, text, username });
     res.status(201).json(review);
   } catch (err) {
     res.status(500).json({ message: 'Erro ao criar review.', error: err.message });
@@ -64,9 +72,29 @@ const getReviewsForGameByRawgId = async (req, res) => {
   try {
     // Busca reviews pelo campo rawgGameId
     const reviews = await getReviewsByRawgGameId(rawgId);
+    
     res.status(200).json(reviews);
   } catch (err) {
     res.status(500).json({ message: 'Erro ao buscar reviews.', error: err.message });
+  }
+};
+
+const deleteReview = async (req, res) => {
+  const { reviewId } = req.params;
+  const userId = req.userId; // Supondo que você use autenticação JWT
+
+  try {
+    const review = await Review.findById(reviewId);
+    if (!review) {
+      return res.status(404).json({ message: 'Review não encontrada.' });
+    }
+    if (review.user.toString() !== userId) {
+      return res.status(403).json({ message: 'Você não tem permissão para deletar esta review.' });
+    }
+    await review.deleteOne();
+    res.status(200).json({ message: 'Review deletada com sucesso.' });
+  } catch (err) {
+    res.status(500).json({ message: 'Erro ao deletar review.', error: err.message });
   }
 };
 
@@ -75,5 +103,6 @@ export default {
   getReviewsForUser, 
   createReview, 
   importAllReviews,
-  getReviewsForGameByRawgId // adicione aqui
+  getReviewsForGameByRawgId,
+  deleteReview
 };
