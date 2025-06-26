@@ -44,13 +44,14 @@ export const getReviewsByUser = async (userId) => {
   return Review.find({ user: userId });
 };
 
-export const createLocalReview = async ({ userId, gameId, text, username }) => {
-  const game = await Game.findById(gameId);
+export const createLocalReview = async ({ userId, rawgGameId, text, username }) => {
+  const game = await Game.findOne({ rawgId: Number(rawgGameId) });
   if (!game) throw new Error('Game not found.');
 
   const review = new Review({
     user: userId,
-    game: gameId,
+    game: game._id,
+    rawgGameId: Number(rawgGameId),
     username,
     text,
     created_at: new Date()
@@ -58,4 +59,8 @@ export const createLocalReview = async ({ userId, gameId, text, username }) => {
 
   await review.save();
   return review;
+};
+
+export const getReviewsByRawgGameId = async (rawgId) => {
+  return Review.find({ rawgGameId: Number(rawgId) });
 };

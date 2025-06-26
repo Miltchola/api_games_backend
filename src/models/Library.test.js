@@ -21,12 +21,12 @@ describe('Library Model', () => {
 
   it('deve criar uma biblioteca válida', async () => {
     const userId = new mongoose.Types.ObjectId();
-    const gameId1 = new mongoose.Types.ObjectId();
-    const gameId2 = new mongoose.Types.ObjectId();
+    const rawgId1 = 12345;
+    const rawgId2 = 67890;
 
     const library = new Library({
       userId,
-      games: [gameId1, gameId2],
+      games: [rawgId1, rawgId2],
     });
 
     const savedLibrary = await library.save();
@@ -34,8 +34,8 @@ describe('Library Model', () => {
     expect(savedLibrary._id).toBeDefined();
     expect(savedLibrary.userId.toString()).toBe(userId.toString());
     expect(savedLibrary.games.length).toBe(2);
-    expect(savedLibrary.games[0].toString()).toBe(gameId1.toString());
-  });
+    expect(savedLibrary.games[0]).toBe(rawgId1);
+   });
 
   it('deve exigir o campo userId', async () => {
     const library = new Library({ games: [] });

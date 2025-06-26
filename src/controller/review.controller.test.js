@@ -7,6 +7,10 @@ import {
   createLocalReview 
 } from '../services/review.service.js';
 
+// Adicione no início do arquivo (após os outros imports)
+import User from '../models/User.js';
+jest.mock('../models/User.js');
+
 jest.mock('../models/Game.js');
 jest.mock('../services/review.service.js', () => ({
   fetchAndSaveReviewsFromRawg: jest.fn(),
@@ -91,25 +95,34 @@ describe('reviewController', () => {
   });
 
   describe('createReview', () => {
-    it('deve retornar 400 se faltar gameId ou text', async () => {
-      req.body = { gameId: '', text: '' };
+    beforeEach(() => {
+      // Configura o mock do User para retornar um usuário padrão
+      User.findById.mockResolvedValue({ 
+        _id: 'user123', 
+        username: 'TestUser' 
+      });
+    });
+
+    it('deve retornar 400 se faltar rawgGameId ou text', async () => {
+      req.body = { rawgGameId: '', text: '' };
 
       await reviewController.createReview(req, res);
 
       expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({ message: 'gameId e text são obrigatórios.' });
+      expect(res.json).toHaveBeenCalledWith({ message: 'rawgGameId e text são obrigatórios.' });
     });
 
     it('deve criar review e retornar 201', async () => {
-      req.body = { gameId: 'game1', text: 'Muito bom!' };
+      req.body = { rawgGameId: 'game1', text: 'Muito bom!' };
       const fakeReview = { id: 1, text: 'Muito bom!' };
       createLocalReview.mockResolvedValue(fakeReview);
 
       await reviewController.createReview(req, res);
 
+      expect(User.findById).toHaveBeenCalledWith('user123');
       expect(createLocalReview).toHaveBeenCalledWith({
         userId: 'user123',
-        gameId: 'game1',
+        rawgGameId: 'game1',
         text: 'Muito bom!',
         username: 'TestUser'
       });
@@ -117,8 +130,18 @@ describe('reviewController', () => {
       expect(res.json).toHaveBeenCalledWith(fakeReview);
     });
 
+    it('deve retornar 404 se usuário não existir', async () => {
+      req.body = { rawgGameId: 'game1', text: 'Muito bom!' };
+      User.findById.mockResolvedValue(null); // Sobrescreve o mock para este teste
+
+      await reviewController.createReview(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(404);
+      expect(res.json).toHaveBeenCalledWith({ message: 'Usuário não encontrado.' });
+    });
+
     it('deve retornar 500 em caso de erro', async () => {
-      req.body = { gameId: 'game1', text: 'Muito bom!' };
+      req.body = { rawgGameId: 'game1', text: 'Muito bom!' };
       createLocalReview.mockRejectedValue(new Error('Erro'));
 
       await reviewController.createReview(req, res);

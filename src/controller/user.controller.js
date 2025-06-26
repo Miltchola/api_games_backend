@@ -47,9 +47,12 @@ const login = async (req, res) => {
   try {
     const user = await authenticateUser({ username, password });
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    console.log("token: ", token);
     return res.status(200).json({
       message: 'User logged in successfully!',
-      token
+      token,
+      userId: user._id,         // RETORNA O ID DO USUÁRIO
+      username: user.username   // RETORNA O NOME DE USUÁRIO
     });
   } catch (error) {
     console.error("Login error:", error);
